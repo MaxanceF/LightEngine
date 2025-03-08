@@ -1,7 +1,7 @@
 #pragma once
 
 #include <SFML/System/Vector2.hpp>
-#include <SFML/Graphics/CircleShape.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
 
 namespace sf 
 {
@@ -21,24 +21,32 @@ class Entity
     };
 
 protected:
-    sf::CircleShape mShape;
+    sf::RectangleShape mShape;
     sf::Vector2f mDirection;
 	Target mTarget;
     float mSpeed = 0.f;
     bool mToDestroy = false;
     int mTag = -1;
 	bool mRigidBody = false;
+	bool mKinematic = false;
+	bool mGravity = false;
 
 public:
+	float mGravitySpeed = 0.f;
+
 	bool GoToDirection(int x, int y, float speed = -1.f);
     bool GoToPosition(int x, int y, float speed = -1.f);
     void SetPosition(float x, float y, float ratioX = 0.5f, float ratioY = 0.5f);
 	void SetDirection(float x, float y, float speed = -1.f);
 	void SetSpeed(float speed) { mSpeed = speed; }
 	void SetTag(int tag) { mTag = tag; }
-	float GetRadius() const { return mShape.getRadius(); }
+	sf::Vector2f GetSize() const { return mShape.getSize(); }
 	void SetRigidBody(bool isRigitBody) { mRigidBody = isRigitBody; }
 	bool IsRigidBody() const { return mRigidBody; }
+	void SetKinematic(bool isKinematic) { mKinematic = isKinematic; }
+	bool IsKinematic() const { return mKinematic; }
+	void SetGravity(bool hasGravity) { mGravity = hasGravity; }
+	bool HasGravity() const { return mGravity; }
 
     sf::Vector2f GetPosition(float ratioX = 0.5f, float ratioY = 0.5f) const;
 	sf::Shape* GetShape() { return &mShape; }
@@ -70,7 +78,7 @@ protected:
 	
 private:
     void Update();
-	void Initialize(float radius, const sf::Color& color);
+	void Initialize(int width, int height, const sf::Color& color);
 	void Repulse(Entity* other);
 
     friend class GameManager;
