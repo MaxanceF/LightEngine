@@ -25,7 +25,7 @@
             "preprocessor_definitions": "_DEBUG;_CONSOLE;%(PreprocessorDefinitions);SFML_STATIC",
             "sdl_check": "true",
             "subsystem": "Console",
-            "type": "Bibliothèque statique (.lib)",
+            "type": "Static library (.lib)",
             "use_debug_libraries": "true",
             "vcpkg_configuration": "Debug",
             "warning_level": "Level3"

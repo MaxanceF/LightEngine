@@ -13,7 +13,7 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{053E88F4-946E-464A-9BE4-06B7DBEEC2B2}</ProjectGuid>
+    <ProjectGuid>{F9AE0FA2-3951-4510-85A7-756516742045}</ProjectGuid>
     <RootNamespace>LightEngine</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -95,19 +95,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\LightEngine\Debug.cpp" />
-    <ClCompile Include="..\..\..\src\LightEngine\DummyEntity.cpp" />
     <ClCompile Include="..\..\..\src\LightEngine\Entity.cpp" />
     <ClCompile Include="..\..\..\src\LightEngine\GameManager.cpp" />
-    <ClCompile Include="..\..\..\src\LightEngine\SampleScene.cpp" />
     <ClCompile Include="..\..\..\src\LightEngine\Scene.cpp" />
     <ClCompile Include="..\..\..\src\LightEngine\Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\LightEngine\Debug.h" />
-    <ClInclude Include="..\..\..\src\LightEngine\DummyEntity.h" />
     <ClInclude Include="..\..\..\src\LightEngine\Entity.h" />
     <ClInclude Include="..\..\..\src\LightEngine\GameManager.h" />
-    <ClInclude Include="..\..\..\src\LightEngine\SampleScene.h" />
     <ClInclude Include="..\..\..\src\LightEngine\Scene.h" />
     <ClInclude Include="..\..\..\src\LightEngine\Utils.h" />
   </ItemGroup>

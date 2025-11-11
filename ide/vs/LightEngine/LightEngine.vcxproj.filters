@@ -2,15 +2,15 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
     <ItemGroup>
         <Filter Include="header">
-            <UniqueIdentifier>{4C042BD6-8F6B-4A98-8062-2E71EBC2715E}</UniqueIdentifier>
+            <UniqueIdentifier>{4D4A13C1-E715-45D7-910E-EDF8AB2508D1}</UniqueIdentifier>
             <Extensions>h;hpp</Extensions>
         </Filter>
         <Filter Include="resource">
-            <UniqueIdentifier>{FB5303A4-A019-4CAD-9660-ADCED2DAF419}</UniqueIdentifier>
+            <UniqueIdentifier>{95439915-CB14-43D8-87C1-9CCD4B473D94}</UniqueIdentifier>
             <Extensions>hlsl;jpg;jpeg;png;wav;mp3;ico;dds;rc;obj</Extensions>
         </Filter>
         <Filter Include="source">
-            <UniqueIdentifier>{74C4A27E-FFF7-46BC-B034-515952889345}</UniqueIdentifier>
+            <UniqueIdentifier>{C9EC3F19-7C81-4394-91D8-66D4723CF7A1}</UniqueIdentifier>
             <Extensions>cpp;c</Extensions>
         </Filter>
     </ItemGroup>
@@ -18,16 +18,10 @@
         <ClCompile Include="..\..\..\src\LightEngine\Debug.cpp">
             <Filter>source</Filter>
         </ClCompile>
-        <ClCompile Include="..\..\..\src\LightEngine\DummyEntity.cpp">
-            <Filter>source</Filter>
-        </ClCompile>
         <ClCompile Include="..\..\..\src\LightEngine\Entity.cpp">
             <Filter>source</Filter>
         </ClCompile>
         <ClCompile Include="..\..\..\src\LightEngine\GameManager.cpp">
-            <Filter>source</Filter>
-        </ClCompile>
-        <ClCompile Include="..\..\..\src\LightEngine\SampleScene.cpp">
             <Filter>source</Filter>
         </ClCompile>
         <ClCompile Include="..\..\..\src\LightEngine\Scene.cpp">
@@ -39,16 +33,10 @@
         <ClInclude Include="..\..\..\src\LightEngine\Debug.h">
             <Filter>header</Filter>
         </ClInclude>
-        <ClInclude Include="..\..\..\src\LightEngine\DummyEntity.h">
-            <Filter>header</Filter>
-        </ClInclude>
         <ClInclude Include="..\..\..\src\LightEngine\Entity.h">
             <Filter>header</Filter>
         </ClInclude>
         <ClInclude Include="..\..\..\src\LightEngine\GameManager.h">
-            <Filter>header</Filter>
-        </ClInclude>
-        <ClInclude Include="..\..\..\src\LightEngine\SampleScene.h">
             <Filter>header</Filter>
         </ClInclude>
         <ClInclude Include="..\..\..\src\LightEngine\Scene.h">
