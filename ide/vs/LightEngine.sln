@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30319.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LightEngine", "LightEngine\LightEngine.vcxproj", "{12ECCB05-52DB-4359-B1E0-B7699087E0E6}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LightEngine", "LightEngine\LightEngine.vcxproj", "{053E88F4-946E-464A-9BE4-06B7DBEEC2B2}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample", "Sample\Sample.vcxproj", "{06A80D5E-22EA-4506-AD9B-FAE8144AF761}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
@@ -11,12 +15,18 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
 		Release|x64 = Release|x64
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{12ECCB05-52DB-4359-B1E0-B7699087E0E6}.Debug|x64.ActiveCfg = Debug|x64
-		{12ECCB05-52DB-4359-B1E0-B7699087E0E6}.Debug|x64.Build.0 = Debug|x64
-		{12ECCB05-52DB-4359-B1E0-B7699087E0E6}.Release|x64.ActiveCfg = Release|x64
-		{12ECCB05-52DB-4359-B1E0-B7699087E0E6}.Release|x64.Build.0 = Release|x64
+		{053E88F4-946E-464A-9BE4-06B7DBEEC2B2}.Debug|x64.ActiveCfg = Debug|x64
+		{053E88F4-946E-464A-9BE4-06B7DBEEC2B2}.Debug|x64.Build.0 = Debug|x64
+		{053E88F4-946E-464A-9BE4-06B7DBEEC2B2}.Release|x64.ActiveCfg = Release|x64
+		{053E88F4-946E-464A-9BE4-06B7DBEEC2B2}.Release|x64.Build.0 = Release|x64
+		{06A80D5E-22EA-4506-AD9B-FAE8144AF761}.Debug|x64.ActiveCfg = Debug|x64
+		{06A80D5E-22EA-4506-AD9B-FAE8144AF761}.Debug|x64.Build.0 = Debug|x64
+		{06A80D5E-22EA-4506-AD9B-FAE8144AF761}.Release|x64.ActiveCfg = Release|x64
+		{06A80D5E-22EA-4506-AD9B-FAE8144AF761}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -24,6 +34,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {A31DE1A3-72F0-49F9-8CB0-D95A5FF5B0F8}
+		SolutionGuid = {EFE0C934-5B62-4F4B-A16B-4CF6160E7202}
 	EndGlobalSection
 EndGlobal
