@@ -1,18 +1,23 @@
 #pragma once
 
+#include "Food.h"
+#include "Spike.h"
 #include "Scene.h"
 
-class DummyEntity;
+class Eater;
 
 class SampleScene : public Scene
 {
-	DummyEntity* pEntity1;
-	DummyEntity* pEntity2;
+	Eater* pEntity1;
+	Eater* pEntity2;
 
-	DummyEntity* pEntitySelected;
+	Eater* pEntitySelected;
+
+	Food* pFood1;
+	Spike* pSpike1;
 
 private:
-	void TrySetSelectedEntity(DummyEntity* pEntity, int x, int y);
+	void TrySetSelectedEntity(Eater* pEntity, int x, int y);
 
 public:
 	void OnInitialize() override;
