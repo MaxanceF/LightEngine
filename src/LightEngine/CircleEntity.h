@@ -1,9 +1,12 @@
 #pragma once
 #include "Entity.h"
 
-class DummyEntity : public Entity
+class CircleEntity : public Entity
 {
+private:
+	
 public:
 	void OnCollision(Entity* other) override;
+	void OnInitialize();
 };
 

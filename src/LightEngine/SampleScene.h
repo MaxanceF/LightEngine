@@ -2,27 +2,24 @@
 
 #include "Scene.h"
 
-class DummyEntity;
+class CircleEntity;
 
 class SampleScene : public Scene
 {
-	DummyEntity* pEntity1;
-	DummyEntity* pEntity2;
-	DummyEntity* pEntity3;
-	DummyEntity* pEntity4;
-	DummyEntity* pEntity5;
-	DummyEntity* pEntity6;
-	DummyEntity* pEntity7;
-
-	DummyEntity* pEntitySelected;
+	std::vector<CircleEntity*> _entities;
+	
+	float mFoodSpawnTimer = 0.f;
+	float mFoodSpawnCooldown = 0.16f; 
 
 private:
-	void TrySetSelectedEntity(DummyEntity* pEntity, int x, int y);
+	int RandomNumber(int min, int max);
 
 public:
 	void OnInitialize() override;
 	void OnEvent(const sf::Event& event) override;
 	void OnUpdate() override;
+
+	std::vector<CircleEntity*> GetEntities() { return _entities; }
 };
 
 

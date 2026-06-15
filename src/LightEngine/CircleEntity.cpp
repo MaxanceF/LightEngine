@@ -1,8 +1,18 @@
-#include "DummyEntity.h"
+#include "CircleEntity.h"
+#include "CirclePlayer.h"
 
 #include <iostream>
 
-void DummyEntity::OnCollision(Entity* other)
+void CircleEntity::OnInitialize()
 {
-	std::cout << "DummyEntity::OnCollision" << std::endl;
+    
+}
+
+void CircleEntity::OnCollision(Entity* other)
+{
+    if (GetRadius() > other->GetRadius())
+    {
+        AddRadius(other->GetRadius() * 0.1f);
+        other->Destroy();
+    }
 }
