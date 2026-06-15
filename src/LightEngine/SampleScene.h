@@ -8,6 +8,11 @@ class SampleScene : public Scene
 {
 	DummyEntity* pEntity1;
 	DummyEntity* pEntity2;
+	DummyEntity* pEntity3;
+	DummyEntity* pEntity4;
+	DummyEntity* pEntity5;
+	DummyEntity* pEntity6;
+	DummyEntity* pEntity7;
 
 	DummyEntity* pEntitySelected;
 
