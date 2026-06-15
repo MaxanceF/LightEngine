@@ -69,26 +69,3 @@ void Debug::DrawCircle(float x, float y, float radius, const sf::Color& color)
 	Debug::Get()->mCircles.push_back(circle);
 }
 
-void Debug::DrawText(float x, float y, const std::string& text, const sf::Color& color)
-{
-	DrawText(x, y, text, 0.f, 0.f, color);
-}
-
-void Debug::DrawText(float x, float y, const std::string& text, float ratioX, float ratioY, const sf::Color& color)
-{
-	_ASSERT(ratioX >= 0.f && ratioX <= 1.f);
-	_ASSERT(ratioY >= 0.f && ratioY <= 1.f);
-
-	sf::Text sfText;
-
-	sfText.setFont(GameManager::Get()->GetFont());
-	sfText.setString(text);
-	sfText.setCharacterSize(20);
-	sfText.setFillColor(color);
-	sfText.setPosition(x, y);
-
-	const sf::FloatRect& bounds = sfText.getLocalBounds();
-	sfText.setOrigin(bounds.width * ratioX, bounds.height * ratioY);
-
-	Debug::Get()->mTexts.push_back(sfText);
-}

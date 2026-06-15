@@ -1,4 +1,9 @@
+// GameManager.cpp
 #include "GameManager.h"
+#define NOMINMAX
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+#undef CreateWindow    // supprime la macro WinAPI, ta méthode redevient visible
 
 #include "Entity.h"
 #include "Debug.h"
@@ -148,6 +153,9 @@ void GameManager::Update()
 		mEntities.push_back(*it);
 	}
 
+	if (mScreenMelter.IsActive())
+		mScreenMelter.Update(mDeltaTime);
+
 	mEntitiesToAdd.clear();
 }
 
@@ -161,6 +169,9 @@ void GameManager::Draw()
 	}
 	
 	Debug::Get()->Draw(mpWindow);
+
+	if (mScreenMelter.IsActive())
+		mScreenMelter.Draw();
 
 	mpWindow->display();
 }

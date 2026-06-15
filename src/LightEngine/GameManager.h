@@ -2,8 +2,10 @@
 
 #include <list>
 
-#include <SFML/Graphics/Color.hpp>
-#include <SFML/Graphics/Text.hpp>
+#include <SFML/Graphics.hpp>
+
+#include "ScreenMelter.h"
+
 
 class Entity;
 class Scene;
@@ -17,6 +19,7 @@ namespace sf
 
 class GameManager
 {
+	ScreenMelter mScreenMelter;
 	std::list<Entity*> mEntities;
 	std::list<Entity*> mEntitiesToDestroy;
 	std::list<Entity*> mEntitiesToAdd;
@@ -47,6 +50,7 @@ private:
 	sf::RenderWindow* GetWindow() const { return mpWindow; }
 
 public:
+	void TriggerScreenMelt() { mScreenMelter.Trigger(); }
 	~GameManager();
 	static GameManager* Get();
 
