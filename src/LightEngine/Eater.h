@@ -10,10 +10,11 @@ public:
     std::vector<Eater*> Eaters;
     bool IsHisOwnEater(Eater* other);
     void MoveAllEaters(int x,int y,float BaseSpeed);
-    void Split();
+    void SplitAll();
+    
 
 private:
     void Eat(Entity* other);
-    
+    void Split();
     
 };

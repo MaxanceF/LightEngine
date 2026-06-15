@@ -1,6 +1,12 @@
 ﻿#include "Eater.h"
 
+#include <iostream>
+#include <ostream>
+#include <SFML/Window.hpp>
+#include <SFML/Graphics.hpp>
+
 #include "Food.h"
+#include "SampleScene.h"
 #include "Spike.h"
 
 
@@ -15,7 +21,7 @@ void Eater::OnCollision(Entity* other)
     {
         Eat(other);
     }
-    if (dynamic_cast<Eater*>(other) && !IsHisOwnEater(dynamic_cast<Eater*>(other)) && this->GetRadius()>other->GetRadius())
+    if (dynamic_cast<Eater*>(other) && !other->IsTag(this->mTag) && this->GetRadius()>other->GetRadius())
     {
         Eat(other);
     }
@@ -47,13 +53,35 @@ void Eater::Eat(Entity* other)
 
 void Eater::Split()
 {
-    if (Eaters[0]->GetRadius()/2 > 10)
+    int Size = Eaters.size();
+    for (size_t i = 0; i < Size; ++i)
     {
-        Eaters.push_back(CreateEntity<Eater>(Eaters[0]->GetRadius()/2, GetShape()->getFillColor()));
-        Eaters[Eaters.size()-1]->SetRigidBody(true);
-        Eaters[Eaters.size()-1]->SetPosition(Eaters[0]->GetPosition().x+1, Eaters[0]->GetPosition().y+1);
-        Eaters[0]->SetRadius(Eaters[Eaters.size()-1]->GetRadius());
-    } 
+        Eater* oEater = Eaters[i];
+        if ( oEater != nullptr && oEater->GetRadius() > 20)
+        {
+            float newRadius = oEater->GetRadius() / 2.0f;
+            Eater* newEater = CreateEntity<Eater>(newRadius, oEater->GetShape()->getFillColor());
+            newEater->SetRigidBody(true);
+
+            sf::Vector2i mousePos = sf::Mouse::getPosition(*GetScene()->GetRenderWindow());
+            sf::Vector2f vec(mousePos.x- oEater->GetPosition().x, mousePos.y - oEater->GetPosition().y);
+            float length = std::sqrt(vec.x * vec.x + vec.y * vec.y);
+            if (length != 0)
+            {
+                vec.x /= length;
+                vec.y /= length;
+            }
+            std::cout<<std::to_string(vec.x) + " " +std::to_string(vec.y) <<std::endl;
+            newEater->SetPosition(oEater->GetPosition().x, oEater->GetPosition().y);
+            
+            newEater->GoToPosition(oEater->GetPosition().x + vec.x*150, oEater->GetPosition().y + vec.y*150, 300);
+            newEater->SetTag(oEater->mTag);
+            
+            Eaters.push_back(newEater);
+
+            oEater->SetRadius(newRadius);
+        }
+    }
 }
 
 void Eater::MoveAllEaters(int x, int y, float BaseSpeed)
@@ -62,4 +90,9 @@ void Eater::MoveAllEaters(int x, int y, float BaseSpeed)
     {
         oEater->GoToPosition(x,y,BaseSpeed/(oEater->GetRadius()/75));
     }
+}
+
+void Eater::SplitAll()
+{
+    Split();
 }

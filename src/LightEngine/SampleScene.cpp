@@ -13,10 +13,12 @@ void SampleScene::OnInitialize()
 	pEntity1 = CreateEntity<Eater>(100, sf::Color::Red);
 	pEntity1->SetPosition(100, 100);
 	pEntity1->SetRigidBody(true);
+	pEntity1->SetTag(1);
 
 	pEntity2 = CreateEntity<Eater>(50, sf::Color::Green);
 	pEntity2->SetPosition(500, 500);
 	pEntity2->SetRigidBody(true);
+	pEntity2->SetTag(2);
 
 	pEntitySelected = nullptr;
 	
@@ -73,7 +75,7 @@ void SampleScene::OnUpdate()
 	{
 		if (pEntitySelected != nullptr) 
 		{
-			pEntitySelected->Split();
+			pEntitySelected->SplitAll();
 		}
 	}
 	m_wasSpacePressed = isSpacePressed;
