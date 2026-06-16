@@ -1,10 +1,8 @@
 #pragma once
 
-#include "Food.h"
-#include "Spike.h"
 #include "Scene.h"
 
-class Eater;
+class DummyEntity;
 
 class SampleScene : public Scene
 {
@@ -13,14 +11,11 @@ class SampleScene : public Scene
 
 	DummyEntity* pEntitySelected;
 
-
 private:
-	void TrySetSelectedEntity(Eater* pEntity, int x, int y);
+	void TrySetSelectedEntity(DummyEntity* pEntity, int x, int y);
 
 public:
 	void OnInitialize() override;
 	void OnEvent(const sf::Event& event) override;
 	void OnUpdate() override;
 };
-
-

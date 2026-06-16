@@ -1,12 +1,8 @@
 #include "SampleScene.h"
 
-#include "Eater.h"
-
-#include "Food.h"
+#include "DummyEntity.h"
 
 #include "Debug.h"
-
-
 
 void SampleScene::OnInitialize()
 {
@@ -19,7 +15,7 @@ void SampleScene::OnInitialize()
 	pEntity2->SetRigidBody(true);
 
 	pEntitySelected = nullptr;
-	
+}
 
 void SampleScene::OnEvent(const sf::Event& event)
 {
@@ -36,20 +32,18 @@ void SampleScene::OnEvent(const sf::Event& event)
 	{
 		if (pEntitySelected != nullptr) 
 		{
-			pEntitySelected->MoveAllEaters(event.mouseButton.x, event.mouseButton.y, 100.f);
+			pEntitySelected->GoToPosition(event.mouseButton.x, event.mouseButton.y, 100.f);
 		}
 	}
-	
 }
 
-void SampleScene::TrySetSelectedEntity(Eater* pEntity, int x, int y)
+void SampleScene::TrySetSelectedEntity(DummyEntity* pEntity, int x, int y)
 {
 	if (pEntity->IsInside(x, y) == false)
 		return;
 
 	pEntitySelected = pEntity;
 }
-
 
 void SampleScene::OnUpdate()
 {
@@ -58,5 +52,4 @@ void SampleScene::OnUpdate()
 		sf::Vector2f position = pEntitySelected->GetPosition();
 		Debug::DrawCircle(position.x, position.y, 10, sf::Color::Blue);
 	}
-
 }
