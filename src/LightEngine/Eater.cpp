@@ -74,7 +74,7 @@ void Eater::Split()
             std::cout<<std::to_string(vec.x) + " " +std::to_string(vec.y) <<std::endl;
             newEater->SetPosition(oEater->GetPosition().x, oEater->GetPosition().y);
             
-            newEater->GoToPosition(oEater->GetPosition().x + vec.x*150, oEater->GetPosition().y + vec.y*150, 300);
+            newEater->GoToPosition(oEater->GetPosition().x + vec.x*225, oEater->GetPosition().y + vec.y*225, 300);
             newEater->SetTag(oEater->mTag);
             
             Eaters.push_back(newEater);
