@@ -1,24 +1,33 @@
 #include "CircleEntity.h"
 #include "CirclePlayer.h"
 #include "SampleScene.h"
-#include <iostream>
 
 void CircleEntity::OnInitialize()
 {
     SetRigidBody(true);
-    
+    _visualRadius = GetRadius();
+    _targetRadius = GetRadius();
+}
+
+void CircleEntity::OnUpdate()
+{
+    if (_visualRadius < 0.f) _visualRadius = GetRadius();
+    if (_targetRadius < 0.f) _targetRadius = GetRadius();
+
+    _visualRadius += (_targetRadius - _visualRadius) * _smoothSpeed * GetDeltaTime();
+
+    mShape.setRadius(_visualRadius);
 }
 
 void CircleEntity::OnCollision(Entity* other)
 {
+    if (IsTag(3) || other->IsTag(3)) return;
+
     if (GetRadius() >= other->GetRadius() * _collisionThreshold)
     {
-        SetOrigin(0.5f, 0.5f);
-        AddRadius(other->GetRadius() * _eatMultiplier);
-        SetOrigin(0.0f, 0.0f);
-        auto* scene = GetScene<SampleScene>();
-
-        scene->DeleteEntity(other);
-        sf::Vector2i mousePos = sf::Mouse::getPosition(*GetScene()->GetRenderWindow());
+        float newR = std::sqrt(GetRadius() * GetRadius()
+                             + other->GetRadius() * other->GetRadius() * _eatMultiplier);
+        SetRadius(newR); 
+        GetScene<SampleScene>()->DeleteEntity(other);
     }
 }

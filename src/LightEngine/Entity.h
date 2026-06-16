@@ -39,8 +39,8 @@ public:
 	float GetRadius() const { return mShape.getRadius(); }
 	void SetRigidBody(bool isRigitBody) { mRigidBody = isRigitBody; }
 	bool IsRigidBody() const { return mRigidBody; }
-	void SetRadius(float radius) { mShape.setRadius(radius); }
-	void AddRadius(float radius) { mShape.setRadius(mShape.getRadius() + radius); }
+	void virtual SetRadius(float radius) { mShape.setRadius(radius); }
+	void virtual AddRadius(float radius) { mShape.setRadius(mShape.getRadius() + radius); }
 	void SetOrigin(float x, float y) { mShape.setOrigin(x * mShape.getScale().x, y * mShape.getScale().y); }
 
     sf::Vector2f GetPosition(float ratioX = 0.5f, float ratioY = 0.5f) const;

@@ -8,6 +8,8 @@ class CircleEntity;
 
 class SampleScene : public Scene
 {
+	sf::Vector2f FindFreePosition(float radius);
+	
 	std::vector<CircleEntity*> _entities;
 
 	float mFoodSpawnTimer = 0.f;

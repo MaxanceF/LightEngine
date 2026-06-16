@@ -16,33 +16,106 @@ int SampleScene::RandomNumber(int min, int max)
     std::uniform_int_distribution<int> dist(min, max);
     return dist(gen);
 }
+sf::Vector2f SampleScene::FindFreePosition(float radius)
+{
+    const int kMaxTries = 50;
+
+    for (int attempt = 0; attempt < kMaxTries; attempt++)
+    {
+        float x = (float)RandomNumber((int)radius, 1280 - (int)radius);
+        float y = (float)RandomNumber((int)radius, 720  - (int)radius);
+
+        bool overlaps = false;
+        for (CircleEntity* e : _entities)
+        {
+            sf::Vector2f pos = e->GetPosition();
+            float dx = pos.x - x;
+            float dy = pos.y - y;
+            float minDist = e->GetRadius() + radius;
+            if (dx*dx + dy*dy < minDist * minDist)
+            {
+                overlaps = true;
+                break;
+            }
+        }
+
+        if (!overlaps)
+            return { x, y };
+    }
+
+    // Fallback si aucune position libre trouvée après kMaxTries
+    return {
+        (float)RandomNumber((int)radius, 1280 - (int)radius),
+        (float)RandomNumber((int)radius, 720  - (int)radius)
+    };
+}
+
+void SampleScene::SpawnEntity()
+{
+    float radius = (float)RandomNumber(20, 25);
+    auto* circle = CreateEntity<CircleEnemy>(radius, sf::Color::Blue);
+    sf::Vector2f pos = FindFreePosition(radius);
+    circle->SetPosition(pos.x, pos.y);
+    circle->SetTag(2);
+    _entities.push_back(circle);
+}
+
+void SampleScene::AddEntity(CircleEntity* entity)
+{
+    // Repositionner si overlap au spawn (cas du split joueur)
+    sf::Vector2f pos = entity->GetPosition();
+    float r = entity->GetRadius();
+
+    for (CircleEntity* e : _entities)
+    {
+        if (e == entity) continue;
+        sf::Vector2f epos = e->GetPosition();
+        float dx = epos.x - pos.x;
+        float dy = epos.y - pos.y;
+        float minDist = e->GetRadius() + r;
+        if (dx*dx + dy*dy < minDist * minDist)
+        {
+            // Pousse l'entité hors du collider
+            float dist = std::sqrt(dx*dx + dy*dy);
+            if (dist < 0.001f) dist = 1.f;
+            float push = (minDist - dist) + 1.f;
+            pos.x -= (dx / dist) * push;
+            pos.y -= (dy / dist) * push;
+        }
+    }
+
+    entity->SetPosition(pos.x, pos.y);
+    _entities.push_back(entity);
+}
 
 void SampleScene::OnInitialize()
 {
-    // INIT FOOD
     for (int i = 0; i < 100; i++)
     {
-        auto* circle = CreateEntity<CircleEntity>(RandomNumber(3, 6), sf::Color::Red);
-        circle->SetPosition(RandomNumber(0, 1280), RandomNumber(0, 720));
+        float r = (float)RandomNumber(3, 6);
+        auto* circle = CreateEntity<CircleEntity>(r, sf::Color::Red);
+        sf::Vector2f pos = FindFreePosition(r);
+        circle->SetPosition(pos.x, pos.y);
         circle->SetTag(1);
         _entities.push_back(circle);
-        
     }
 
-    // INIT ENEMIES
     for (int i = 0; i < 20; i++)
     {
-        auto* circle = CreateEntity<CircleEnemy>(RandomNumber(20, 25), sf::Color::Blue);
-        circle->SetPosition(RandomNumber(0, 1280), RandomNumber(0, 720));
+        float r = (float)RandomNumber(20, 25);
+        auto* circle = CreateEntity<CircleEnemy>(r, sf::Color::Blue);
+        sf::Vector2f pos = FindFreePosition(r);
+        circle->SetPosition(pos.x, pos.y);
         circle->SetTag(2);
         _entities.push_back(circle);
     }
 
-    // INIT PLAYER
-    auto* circle = CreateEntity<CirclePlayer>(23, sf::Color::White);
-    circle->SetPosition(RandomNumber(0, 1280), RandomNumber(0, 720));
-    circle->SetTag(3);
-    _entities.push_back(circle);
+    float pr = 23.f;
+    auto* player = CreateEntity<CirclePlayer>(pr, sf::Color::White);
+    sf::Vector2f pos = FindFreePosition(pr);
+    player->SetPosition(pos.x, pos.y);
+    player->SetTag(3);
+    _entities.push_back(player);
 }
 
 void SampleScene::OnEvent(const sf::Event& event)
@@ -104,17 +177,4 @@ void SampleScene::DeleteEntity(Entity* entity)
         _entities.erase(it);
 
     entity->Destroy();
-}
-
-void SampleScene::SpawnEntity()
-{
-    auto* circle = CreateEntity<CircleEnemy>(RandomNumber(20, 25), sf::Color::Blue);
-    circle->SetPosition(RandomNumber(0, 1280), RandomNumber(0, 720));
-    circle->SetTag(2);
-    _entities.push_back(circle);
-}
-
-void SampleScene::AddEntity(CircleEntity* entity)
-{
-    _entities.push_back(entity);
 }

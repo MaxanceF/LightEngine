@@ -12,8 +12,8 @@ static sf::Vector2f NormalizeVec(sf::Vector2f v)
 
 void CirclePlayer::OnUpdate()
 {
+    CircleEntity::OnUpdate(); 
     float dt = GetDeltaTime();
-
     sf::RenderWindow* window = GetScene()->GetRenderWindow();
     sf::Vector2i mousePixel  = sf::Mouse::getPosition(*window);
     sf::Vector2f mousePos    = window->mapPixelToCoords(mousePixel);
@@ -80,8 +80,6 @@ void CirclePlayer::OnCollision(Entity* other)
         CirclePlayer* otherPlayer = static_cast<CirclePlayer*>(other);
         if (otherPlayer->mDashSpeed > 50.f || mDashSpeed > 50.f) return;
     }
-    SetOrigin(0.5f, 0.5f);
     AddRadius(other->GetRadius() * multiplier);
-    SetOrigin(0.0f, 0.0f);
     GetScene<SampleScene>()->DeleteEntity(other);
 }

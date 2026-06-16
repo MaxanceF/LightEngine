@@ -168,6 +168,7 @@ void CircleEnemy::TransitionTo(AIState next)
 
 void CircleEnemy::OnUpdate()
 {
+    CircleEntity::OnUpdate(); 
     auto* scene = GetScene<SampleScene>();
     float dt    = GetDeltaTime();
 
