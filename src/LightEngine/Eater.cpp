@@ -13,6 +13,7 @@
 Eater::Eater()
 {
     Eaters.push_back(this);
+    MainEater = this;
 }
 
 void Eater::OnCollision(Entity* other)
@@ -27,23 +28,15 @@ void Eater::OnCollision(Entity* other)
     }
     if (dynamic_cast<Spike*>(other) && this->GetRadius()>other->GetRadius())
     {
-        Split();
+        for (int i = 0; i<3;i++)
+        {
+            Split();
+        }
         other->Destroy();
     }
     
 }
 
-bool Eater::IsHisOwnEater(Eater* other)
-{
-    for (Eater* oEater : Eaters)
-    {
-        if(other == oEater)
-        {
-            return true;
-        }
-    }
-    return false;
-}
 
 void Eater::Eat(Entity* other)
 {
@@ -71,13 +64,13 @@ void Eater::Split()
                 vec.x /= length;
                 vec.y /= length;
             }
-            std::cout<<std::to_string(vec.x) + " " +std::to_string(vec.y) <<std::endl;
             newEater->SetPosition(oEater->GetPosition().x, oEater->GetPosition().y);
             
             newEater->GoToPosition(oEater->GetPosition().x + vec.x*225, oEater->GetPosition().y + vec.y*225, 300);
             newEater->SetTag(oEater->mTag);
+            newEater->MainEater = oEater->MainEater;
             
-            Eaters.push_back(newEater);
+            MainEater->Eaters.push_back(newEater);
 
             oEater->SetRadius(newRadius);
         }

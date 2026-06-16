@@ -16,5 +16,5 @@ public:
 private:
     void Eat(Entity* other);
     void Split();
-    
+    Eater* MainEater;
 };
