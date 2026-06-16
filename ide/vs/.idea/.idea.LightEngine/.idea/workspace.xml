@@ -9,8 +9,6 @@
   <component name="ChangeListManager">
     <list default="true" id="edb6aa6c-4f58-47f3-a8db-2d24d26efc31" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.LightEngine/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.LightEngine/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../src/LightEngine/SampleScene.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../src/LightEngine/SampleScene.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../src/LightEngine/SampleScene.h" beforeDir="false" afterPath="$PROJECT_DIR$/../../src/LightEngine/SampleScene.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,7 +46,7 @@
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;TronMaxance&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;GoonCave&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -92,6 +90,8 @@
       <workItem from="1781594045087" duration="6409000" />
       <workItem from="1781603766297" duration="362000" />
       <workItem from="1781604149130" duration="39000" />
+      <workItem from="1781614606315" duration="6000" />
+      <workItem from="1781614625912" duration="95000" />
     </task>
     <servers />
   </component>
