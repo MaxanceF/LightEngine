@@ -8,13 +8,11 @@ class Eater;
 
 class SampleScene : public Scene
 {
-	Eater* pEntity1;
-	Eater* pEntity2;
+	DummyEntity* pEntity1;
+	DummyEntity* pEntity2;
 
-	Eater* pEntitySelected;
+	DummyEntity* pEntitySelected;
 
-	Food* pFood1;
-	Spike* pSpike1;
 
 private:
 	void TrySetSelectedEntity(Eater* pEntity, int x, int y);
