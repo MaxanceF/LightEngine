@@ -9,6 +9,7 @@ class SampleScene : public Scene
 	DummyEntity* pEntity1;
 	DummyEntity* pEntity2;
 
+public :
 	DummyEntity* pEntitySelected;
 
 private:

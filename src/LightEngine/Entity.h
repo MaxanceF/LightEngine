@@ -2,6 +2,7 @@
 
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
 
 namespace sf 
 {
@@ -21,7 +22,7 @@ class Entity
     };
 
 protected:
-    sf::CircleShape mShape;
+    sf::RectangleShape mShape;
     sf::Vector2f mDirection;
 	Target mTarget;
     float mSpeed = 0.f;

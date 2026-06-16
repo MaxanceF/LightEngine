@@ -9,7 +9,9 @@
   <component name="ChangeListManager">
     <list default="true" id="edb6aa6c-4f58-47f3-a8db-2d24d26efc31" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.LightEngine/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.LightEngine/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../src/LightEngine/SampleScene.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../src/LightEngine/SampleScene.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/LightEngine/DummyEntity.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../src/LightEngine/DummyEntity.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/LightEngine/DummyEntity.h" beforeDir="false" afterPath="$PROJECT_DIR$/../../src/LightEngine/DummyEntity.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/LightEngine/Entity.h" beforeDir="false" afterPath="$PROJECT_DIR$/../../src/LightEngine/Entity.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../src/LightEngine/SampleScene.h" beforeDir="false" afterPath="$PROJECT_DIR$/../../src/LightEngine/SampleScene.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
