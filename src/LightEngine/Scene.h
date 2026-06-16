@@ -1,5 +1,10 @@
 #pragma once
 
+namespace sf
+{
+	class RenderWindow;
+}
+
 class GameManager;
 
 #include <SFML/Window/Event.hpp>
@@ -28,6 +33,8 @@ public:
 
 	int GetWindowWidth() const;
 	int GetWindowHeight() const;
+
+	sf::RenderWindow* GetRenderWindow() const;
 
 	friend GameManager;
 };

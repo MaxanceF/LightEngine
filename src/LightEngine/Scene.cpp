@@ -16,3 +16,6 @@ float Scene::GetDeltaTime() const
 {
 	return mpGameManager->mDeltaTime;
 }
+sf::RenderWindow* Scene::GetRenderWindow() const {
+	return mpGameManager ? mpGameManager->GetWindow() : nullptr;
+}

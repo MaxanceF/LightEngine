@@ -50,7 +50,7 @@ void GameManager::CreateWindow(unsigned int width, unsigned int height, const ch
 	settings.antialiasingLevel = 8;
 	
 	mpWindow = new sf::RenderWindow(sf::VideoMode(width, height), title, sf::Style::Default, settings);
-	mpWindow->setFramerateLimit(fpsLimit);
+	//mpWindow->setFramerateLimit(fpsLimit);
 
 	mWindowWidth = width;
 	mWindowHeight = height;
@@ -157,6 +157,12 @@ void GameManager::Update()
 		mScreenMelter.Update(mDeltaTime);
 
 	mEntitiesToAdd.clear();
+	_fpsTimer += GetDeltaTime();
+	if (_fpsTimer > _fpsCooldown)
+	{
+		mpWindow->setTitle(std::to_string((int)(1/GetDeltaTime())) + " FPS");
+		_fpsTimer = 0;
+	}
 }
 
 void GameManager::Draw()

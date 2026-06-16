@@ -1,6 +1,5 @@
 #pragma once
 #include "CircleEntity.h"
-#include "CircleFragment.h"
 
 // ============================================================
 //  CircleEnemy — IA multi-couche v2 (ULTRA BANGER EDITION)
@@ -88,7 +87,6 @@ private:
 
 public:
     bool            mIsSplit  = false;
-    CircleFragment* mFragment = nullptr;
 
     void TrySplit(sf::Vector2f directionOverride = {0.f, 0.f});
     static constexpr float kMinSplitRadius = 14.f;

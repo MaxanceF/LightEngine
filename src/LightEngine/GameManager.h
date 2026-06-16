@@ -47,7 +47,7 @@ private:
 
 	void SetDeltaTime(float deltaTime) { mDeltaTime = deltaTime; }
 
-	sf::RenderWindow* GetWindow() const { return mpWindow; }
+
 
 public:
 	void TriggerScreenMelt() { mScreenMelter.Trigger(); }
@@ -62,6 +62,10 @@ public:
 	float GetDeltaTime() const { return mDeltaTime; }
 	Scene* GetScene() const { return mpScene; }
 	sf::Font& GetFont() { return mFont; };
+	sf::RenderWindow* GetWindow() const { return mpWindow; }
+
+	float _fpsCooldown = 0.2f;
+	float _fpsTimer = 0.f;
 
 	friend Debug;
 	friend Scene;

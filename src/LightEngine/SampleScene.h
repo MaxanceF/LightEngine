@@ -24,7 +24,8 @@ public:
 	void OnUpdate() override;
 	void DeleteEntity(Entity* entity);
 	void SpawnEntity();
-	std::vector<CircleEntity*> GetEntities() { return _entities; }
+	std::vector<CircleEntity*>& GetEntities() { return _entities; }
+	void AddEntity(CircleEntity* entity);
 	template<typename T>
 T* CreateAndRegister(float radius, const sf::Color& color)
 	{

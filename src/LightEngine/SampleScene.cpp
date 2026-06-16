@@ -26,10 +26,11 @@ void SampleScene::OnInitialize()
         circle->SetPosition(RandomNumber(0, 1280), RandomNumber(0, 720));
         circle->SetTag(1);
         _entities.push_back(circle);
+        
     }
 
     // INIT ENEMIES
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 20; i++)
     {
         auto* circle = CreateEntity<CircleEnemy>(RandomNumber(20, 25), sf::Color::Blue);
         circle->SetPosition(RandomNumber(0, 1280), RandomNumber(0, 720));
@@ -83,9 +84,17 @@ void SampleScene::OnUpdate()
 
 void SampleScene::DeleteEntity(Entity* entity)
 {
-    if (entity->IsTag(3))  
+    if (entity->IsTag(3))
     {
-        GameManager::Get()->TriggerScreenMelt();
+        int playerCount = 0;
+        for (int i = 0; i < static_cast<int>(_entities.size()); i++)
+        {
+            if (_entities[i]->IsTag(3) && _entities[i] != entity)
+                playerCount++;
+        }
+
+        //if (playerCount == 0)
+            //GameManager::Get()->TriggerScreenMelt();
     }
     if (entity->IsTag(2))
         mPendingEnemyRespawns.push_back(3.f);
@@ -103,4 +112,9 @@ void SampleScene::SpawnEntity()
     circle->SetPosition(RandomNumber(0, 1280), RandomNumber(0, 720));
     circle->SetTag(2);
     _entities.push_back(circle);
+}
+
+void SampleScene::AddEntity(CircleEntity* entity)
+{
+    _entities.push_back(entity);
 }

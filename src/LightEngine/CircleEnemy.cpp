@@ -415,29 +415,7 @@ void CircleEnemy::OnUpdate()
     SetDirection(mVelocity.x, mVelocity.y, mCurrentSpeed);
 }
 
-void CircleEnemy::TrySplit(sf::Vector2f dirOverride)
+void CircleEnemy::TrySplit(sf::Vector2f directionOverride)
 {
-    if (mIsSplit) return;                          // déjà splitté
-    float r = GetRadius();
-    if (r < kMinSplitRadius * 1.5f) return;       // trop petit
-
-    // Nouveau rayon : conservation de surface  →  r_fragment = r / sqrt(2)
-    float newR = r / std::sqrt(2.f);
-    SetRadius(newR);
-
-    // Direction de lancement
-    sf::Vector2f launchDir = (Length(dirOverride) > 0.01f)
-                              ? Normalize(dirOverride)
-                              : mVelocity;
-    if (Length(launchDir) < 0.01f) launchDir = { 1.f, 0.f };
-
-    auto* scene    = GetScene<SampleScene>();
-    auto* fragment = scene->CreateAndRegister<CircleFragment>(newR, mShape.getFillColor());
-    fragment->SetPosition(GetPosition().x, GetPosition().y);
-    fragment->SetDirection(launchDir.x, launchDir.y, CircleFragment::kLaunchSpeed);
-    fragment->SetTag(2);
-    fragment->mOwner  = this;
-
-    mFragment = fragment;
-    mIsSplit  = true;
+    
 }

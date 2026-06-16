@@ -1,6 +1,5 @@
 #include "CircleEntity.h"
 #include "CirclePlayer.h"
-#include "CircleFragment.h"
 #include "SampleScene.h"
 #include <cmath>
 
@@ -11,55 +10,78 @@ static sf::Vector2f NormalizeVec(sf::Vector2f v)
     return { v.x / len, v.y / len };
 }
 
-void CirclePlayer::TrySplit()
-{
-    if (mIsSplit) return;
-    float r = GetRadius();
-    if (r < kMinSplitRadius * 1.5f) return;
-
-    float newR = r / std::sqrt(2.f);
-    SetRadius(newR);
-
-    // Direction = direction du mouvement courant (ou droite par défaut)
-    sf::Vector2f launchDir = NormalizeVec(mDirection);
-    if (launchDir.x == 0.f && launchDir.y == 0.f)
-        launchDir = { 1.f, 0.f };
-
-    auto* scene    = GetScene<SampleScene>();
-    auto* fragment = scene->CreateAndRegister<CircleFragment>(newR, mShape.getFillColor());
-    fragment->SetPosition(GetPosition().x, GetPosition().y);
-    fragment->SetDirection(launchDir.x, launchDir.y, CircleFragment::kLaunchSpeed);
-    fragment->SetTag(3);   // tag joueur pour que les ennemis le reconnaissent
-    fragment->mOwner  = this;
-
-    mFragment = fragment;
-    mIsSplit  = true;
-}
-
 void CirclePlayer::OnUpdate()
 {
-    sf::Vector2f dir(0.f, 0.f);
+    float dt = GetDeltaTime();
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) dir.y--;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) dir.y++;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) dir.x--;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) dir.x++;
+    sf::RenderWindow* window = GetScene()->GetRenderWindow();
+    sf::Vector2i mousePixel  = sf::Mouse::getPosition(*window);
+    sf::Vector2f mousePos    = window->mapPixelToCoords(mousePixel);
 
-    if (dir.x != 0.f || dir.y != 0.f)
+    sf::Vector2f myPos   = GetPosition();
+    sf::Vector2f toMouse = mousePos - myPos;
+    float dist = std::sqrt(toMouse.x * toMouse.x + toMouse.y * toMouse.y);
+    
+    if (mDashSpeed > 1.f)
     {
-        float length = std::sqrt(dir.x * dir.x + dir.y * dir.y);
-        dir /= length;
-        mDirection = dir;   // mémorise pour TrySplit
-        SetDirection(dir.x, dir.y, 250.f);
+        mDashSpeed -= mDashSpeed * mDashFriction * dt;
+        if (mDashSpeed < 1.f) mDashSpeed = 0.f;
     }
+
+    float r         = std::max(GetRadius(), 10.f);
+    float baseSpeed = std::clamp(250.f * std::pow(20.f / r, 0.4f), 50.f, 400.f);
+    
+    if (dist > GetRadius())
+        mDirection = { toMouse.x / dist, toMouse.y / dist };
+    
+    float totalSpeed = (dist > GetRadius() ? baseSpeed : 0.f) + mDashSpeed;
+
+    if (totalSpeed > 0.f)
+        SetDirection(mDirection.x, mDirection.y, totalSpeed);
     else
-    {
         SetSpeed(0.f);
-    }
 
-    // Détection front montant sur Espace (évite le split répété si on maintient)
     bool spaceNow = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
     if (spaceNow && !mSpaceWasPressed)
         TrySplit();
     mSpaceWasPressed = spaceNow;
+}
+
+void CirclePlayer::TrySplit()
+{
+    if (GetRadius() < 15.f) return;
+    AddRadius(-GetRadius() * 0.3f);
+
+    float spawnDist = GetRadius() * 2.f;
+    auto* child = CreateEntity<CirclePlayer>(GetRadius(), sf::Color::White);
+    child->mSpaceWasPressed = true;
+    child->_isChild         = true;
+    child->mDirection       = mDirection;
+    child->mDashSpeed       = 520.f;
+    child->mDashFriction    = 2.8f;
+    
+    child->SetPosition(
+        GetPosition().x + mDirection.x * spawnDist,
+        GetPosition().y + mDirection.y * spawnDist
+    );
+    child->SetTag(3);
+
+    GetScene<SampleScene>()->AddEntity(child);
+}
+
+void CirclePlayer::OnCollision(Entity* other)
+{
+    if (GetRadius() < other->GetRadius() * _collisionThreshold) return;
+
+    float multiplier = other->IsTag(this->mTag) ? 0.7f : _eatMultiplier;
+
+    if (other->IsTag(3))
+    {
+        CirclePlayer* otherPlayer = static_cast<CirclePlayer*>(other);
+        if (otherPlayer->mDashSpeed > 50.f || mDashSpeed > 50.f) return;
+    }
+    SetOrigin(0.5f, 0.5f);
+    AddRadius(other->GetRadius() * multiplier);
+    SetOrigin(0.0f, 0.0f);
+    GetScene<SampleScene>()->DeleteEntity(other);
 }

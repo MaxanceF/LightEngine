@@ -1,17 +1,22 @@
 #pragma once
 #include "CircleEntity.h"
-#include "CircleFragment.h"  // réutilise le même fragment
 
 class CirclePlayer : public CircleEntity
 {
 public:
 	bool            mIsSplit  = false;
-	CircleFragment* mFragment = nullptr;
 
 	static constexpr float kMinSplitRadius = 14.f;
 
+	bool _isChild = false;
+
+	float mDashSpeed    = 0.f;
+	float mDashFriction = 3.5f;   // facteur de décélération
+
+
 protected:
 	void OnUpdate() override;
+	void OnCollision(Entity* other) override;
 
 private:
 	void TrySplit();
