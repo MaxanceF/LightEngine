@@ -7,11 +7,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="edb6aa6c-4f58-47f3-a8db-2d24d26efc31" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.LightEngine/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.LightEngine/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../src/LightEngine/Eater.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../src/LightEngine/Eater.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../src/LightEngine/Eater.h" beforeDir="false" afterPath="$PROJECT_DIR$/../../src/LightEngine/Eater.h" afterDir="false" />
-    </list>
+    <list default="true" id="edb6aa6c-4f58-47f3-a8db-2d24d26efc31" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -138,7 +134,7 @@
       <workItem from="1781510779873" duration="14000" />
       <workItem from="1781510802208" duration="1079000" />
       <workItem from="1781524378349" duration="10891000" />
-      <workItem from="1781594045087" duration="5650000" />
+      <workItem from="1781594045087" duration="6409000" />
     </task>
     <servers />
   </component>
