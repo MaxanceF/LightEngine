@@ -37,8 +37,8 @@ public:
 	void SetDirection(float x, float y, float speed = -1.f);
 	void SetSpeed(float speed) { mSpeed = speed; }
 	void SetTag(int tag) { mTag = tag; }
-	float GetRadius() const { return mShape.getRadius(); }
-	void SetRadius(float radius) { mShape.setRadius(radius); }
+	sf::Vector2f GetSize() const { return mShape.getSize(); }
+	void SetSize(sf::Vector2f Size) { mShape.setSize(Size); }
 	void SetRigidBody(bool isRigitBody) { mRigidBody = isRigitBody; }
 	bool IsRigidBody() const { return mRigidBody; }
 
@@ -59,7 +59,7 @@ public:
 	float GetDeltaTime() const;
 
     template<typename T>
-    T* CreateEntity(float radius, const sf::Color& color);
+    T* CreateEntity(sf::Vector2f size, const sf::Color& color);
 
 protected:
     Entity() = default;
@@ -72,7 +72,7 @@ protected:
 	
 private:
     void Update();
-	void Initialize(float radius, const sf::Color& color);
+	void Initialize(sf::Vector2f size, const sf::Color& color);
 	void Repulse(Entity* other);
 
     friend class GameManager;

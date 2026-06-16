@@ -7,12 +7,12 @@
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
 
-void Entity::Initialize(float radius, const sf::Color& color)
+void Entity::Initialize(sf::Vector2f size, const sf::Color& color)
 {
 	mDirection = sf::Vector2f(0.0f, 0.0f);
 
 	mShape.setOrigin(0.f, 0.f);
-	mShape.setRadius(radius);
+	mShape.setSize(size);
 	mShape.setFillColor(color);
 	
 	mTarget.isSet = false;
@@ -20,41 +20,71 @@ void Entity::Initialize(float radius, const sf::Color& color)
 	OnInitialize();
 }
 
-void Entity::Repulse(Entity* other) 
+void Entity::Repulse(Entity* other)
 {
-	sf::Vector2f distance = GetPosition(0.5f, 0.5f) - other->GetPosition(0.5f, 0.5f);
-	
-	float sqrLength = (distance.x * distance.x) + (distance.y * distance.y);
-	float length = std::sqrt(sqrLength);
+    // Récupère les bounds des deux entités
+    sf::FloatRect bounds1 = mShape.getGlobalBounds();
+    sf::FloatRect bounds2 = other->mShape.getGlobalBounds();
 
-	float radius1 = mShape.getRadius();
-	float radius2 = other->mShape.getRadius();
+    // Calcule le chevauchement sur X et Y
+    float overlapX = std::min(bounds1.left + bounds1.width, bounds2.left + bounds2.width) -
+                     std::max(bounds1.left, bounds2.left);
+    float overlapY = std::min(bounds1.top + bounds1.height, bounds2.top + bounds2.height) -
+                     std::max(bounds1.top, bounds2.top);
 
-	float overlap = (length - (radius1 + radius2)) * 0.5f;
+    // Si pas de chevauchement, on sort
+    if (overlapX <= 0 || overlapY <= 0)
+        return;
 
-	sf::Vector2f normal = distance / length;
-
-	sf::Vector2f translation = overlap * normal;
-
-	sf::Vector2f position1 = GetPosition(0.5f, 0.5f) - translation;
-	sf::Vector2f position2 = other->GetPosition(0.5f, 0.5f) + translation;
-
-	SetPosition(position1.x, position1.y, 0.5f, 0.5f);
-	other->SetPosition(position2.x, position2.y, 0.5f, 0.5f);
+    // Détermine la direction de la séparation (la plus petite distance)
+    if (overlapX < overlapY)
+    {
+        // Séparation sur l'axe X
+        float translationX = overlapX * 0.5f;
+        if (bounds1.left < bounds2.left)
+        {
+            // Déplace bounds1 vers la gauche et bounds2 vers la droite
+            SetPosition(GetPosition().x - translationX, GetPosition().y);
+            other->SetPosition(other->GetPosition().x + translationX, other->GetPosition().y);
+        }
+        else
+        {
+            // Déplace bounds1 vers la droite et bounds2 vers la gauche
+            SetPosition(GetPosition().x + translationX, GetPosition().y);
+            other->SetPosition(other->GetPosition().x - translationX, other->GetPosition().y);
+        }
+    }
+    else
+    {
+        // Séparation sur l'axe Y
+        float translationY = overlapY * 0.5f;
+        if (bounds1.top < bounds2.top)
+        {
+            // Déplace bounds1 vers le haut et bounds2 vers le bas
+            SetPosition(GetPosition().x, GetPosition().y - translationY);
+            other->SetPosition(other->GetPosition().x, other->GetPosition().y + translationY);
+        }
+        else
+        {
+            // Déplace bounds1 vers le bas et bounds2 vers le haut
+            SetPosition(GetPosition().x, GetPosition().y + translationY);
+            other->SetPosition(other->GetPosition().x, other->GetPosition().y - translationY);
+        }
+    }
 }
 
 bool Entity::IsColliding(Entity* other) const
 {
-	sf::Vector2f distance = GetPosition(0.5f, 0.5f) - other->GetPosition(0.5f, 0.5f);
+	sf::Vector2f pos1 = GetPosition();
+	sf::Vector2f pos2 = other->GetPosition();
+	sf::Vector2f size1 = mShape.getSize();
+	sf::Vector2f size2 = other->mShape.getSize();
 
-	float sqrLength = (distance.x * distance.x) + (distance.y * distance.y);
+	// Vérifie le chevauchement sur X et Y
+	bool overlapX = (pos1.x < pos2.x + size2.x) && (pos1.x + size1.x > pos2.x);
+	bool overlapY = (pos1.y < pos2.y + size2.y) && (pos1.y + size1.y > pos2.y);
 
-	float radius1 = mShape.getRadius();
-	float radius2 = other->mShape.getRadius();
-
-	float sqrRadius = (radius1 + radius2) * (radius1 + radius2);
-
-	return sqrLength < sqrRadius;
+	return overlapX && overlapY;
 }
 
 bool Entity::IsInside(float x, float y) const
@@ -63,10 +93,9 @@ bool Entity::IsInside(float x, float y) const
 
 	float dx = x - position.x;
 	float dy = y - position.y;
+	
 
-	float radius = mShape.getRadius();
-
-	return (dx * dx + dy * dy) < (radius * radius);
+	return dx * dx < mShape.getSize().x ||  dy * dy < mShape.getSize().y;
 }
 
 void Entity::Destroy()
@@ -78,10 +107,9 @@ void Entity::Destroy()
 
 void Entity::SetPosition(float x, float y, float ratioX, float ratioY)
 {
-	float size = mShape.getRadius() * 2;
 
-	x -= size * ratioX;
-	y -= size * ratioY;
+	x -= mShape.getSize().x * ratioX;
+	y -= mShape.getSize().y * ratioY;
 
 	mShape.setPosition(x, y);
 
@@ -97,11 +125,11 @@ void Entity::SetPosition(float x, float y, float ratioX, float ratioY)
 
 sf::Vector2f Entity::GetPosition(float ratioX, float ratioY) const
 {
-	float size = mShape.getRadius() * 2;
+	
 	sf::Vector2f position = mShape.getPosition();
 
-	position.x += size * ratioX;
-	position.y += size * ratioY;
+	position.x += mShape.getSize().x * ratioX;
+	position.y += mShape.getSize().y * ratioY;
 
 	return position;
 }
@@ -138,8 +166,13 @@ void Entity::SetDirection(float x, float y, float speed)
 {
 	if (speed > 0)
 		mSpeed = speed;
-
-	mDirection = sf::Vector2f(x, y);
+	sf::Vector2f direction(x, y);
+	float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
+	if (length > 0.0f)
+	{
+		direction /= length; // Normalisation
+	}
+	mDirection = direction;
 	mTarget.isSet = false;
 }
 
