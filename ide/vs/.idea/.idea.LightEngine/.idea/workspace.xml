@@ -10,8 +10,9 @@
     <list default="true" id="edb6aa6c-4f58-47f3-a8db-2d24d26efc31" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.LightEngine/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.LightEngine/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../src/LightEngine/DummyEntity.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../src/LightEngine/DummyEntity.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../src/LightEngine/Entity.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../src/LightEngine/Entity.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/LightEngine/DummyEntity.h" beforeDir="false" afterPath="$PROJECT_DIR$/../../src/LightEngine/DummyEntity.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../src/LightEngine/SampleScene.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../src/LightEngine/SampleScene.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/LightEngine/SampleScene.h" beforeDir="false" afterPath="$PROJECT_DIR$/../../src/LightEngine/SampleScene.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../src/LightEngine/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../src/LightEngine/main.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -32,6 +33,8 @@
     <setting file="file://$PROJECT_DIR$/../../src/LightEngine/Condition.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../src/LightEngine/Debug.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../src/LightEngine/Debug.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../src/LightEngine/DummyEnemy.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../src/LightEngine/DummyEnemy.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../src/LightEngine/DummyEntity.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../src/LightEngine/DummyEntity.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../src/LightEngine/Entity.cpp" root0="FORCE_HIGHLIGHTING" />
@@ -108,7 +111,7 @@
       <workItem from="1781604149130" duration="39000" />
       <workItem from="1781610813694" duration="9691000" />
       <workItem from="1781620563454" duration="1820000" />
-      <workItem from="1781680832093" duration="7721000" />
+      <workItem from="1781680832093" duration="17164000" />
     </task>
     <servers />
   </component>

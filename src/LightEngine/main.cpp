@@ -12,7 +12,7 @@ int main()
 {
     GameManager* pInstance = GameManager::Get();
 
-	pInstance->CreateWindow(960, 960, "SampleScene", 600, sf::Color::Black);
+	pInstance->CreateWindow(640, 640, "SampleScene", 600, sf::Color::Black);
 	
 	pInstance->LaunchScene<SampleScene>();
 

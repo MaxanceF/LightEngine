@@ -9,28 +9,25 @@
 
 DummyEntity::DummyEntity()
 {
+	GetScene<SampleScene>()->SetCell(0, 0, 1);
 	mInvincibilityTime = 2.0f;
 	mIsInvincible = true;
 }
 
 void DummyEntity::OnCollision(Entity* other)
 {
-	if (other == pEntity)
-		return;
-	if (dynamic_cast<Wall*>(other))
-	{
+	
+}
 
-		std::cout << std::to_string(other->GetPosition().x) + " " + std::to_string(other->GetPosition().y) + " & " + std::to_string(GetPosition().x) + " " + std::to_string(GetPosition().y)<< std::endl;
-		Debug* debug = new Debug();
-		debug->DrawRectangle(GetPosition().x, GetPosition().y, other->GetPosition().x - GetPosition().x, other->GetPosition().y - GetPosition().y, sf::Color::Red);
-		if (!mIsInvincible)
-		{
-			//this->Destroy();
-		}
+void DummyEntity::Crash()
+{
+	if (!mIsInvincible)
+	{
+		this->Destroy();
 	}
 }
 
-void DummyEntity::OnUpdate()
+void DummyEntity::Inputs()
 {
 	float speed = 150.0f;
 	sf::Vector2f direction = {0.0f, 0.0f};
@@ -66,8 +63,8 @@ void DummyEntity::OnUpdate()
 			std::rand() % 256,  // G (0-255)
 			std::rand() % 256   // B (0-255)
 		);
-		pEntity = CreateEntity<Wall>(sf::Vector2f{20.0f, 20.0f}, randomColor);
-		float offset = 10.0f;
+		pEntity = CreateEntity<Wall>(sf::Vector2f{20.0f, 20.0f}, sf::Color::Cyan);
+		float offset = 5.0f;
 
 		mCubeStartPos = GetPosition(0.5f, 0.5f);
 
@@ -75,11 +72,18 @@ void DummyEntity::OnUpdate()
 		mCubeStartPos.y -= mLastDirection.y * offset;
 
 		//pEntity->SetPosition(mCubeStartPos.x, mCubeStartPos.y);
+		//std::cout << GetPosition().x << " " << GetPosition().y << std::endl;
+		
 	}
-	
+	GridUpdate(1);
+}
+
+void DummyEntity::OnUpdate()
+{
+	Inputs();
 	if (pEntity)
 	{
-		float trailOffset = 10.0f; // longueur de la traînée derrière le joueur
+		float trailOffset = 5.0f; // longueur de la traînée derrière le joueur
 
 		sf::Vector2f playerPos = GetPosition(0.5f, 0.5f);
 		sf::Vector2f trailPos = playerPos;
@@ -95,7 +99,7 @@ void DummyEntity::OnUpdate()
 		{
 			float width = std::abs(distanceX);
 
-			pEntity->SetSize({width, 20.0f});
+			pEntity->SetSize({width, 10.0f});
 
 			float centerX = mCubeStartPos.x + distanceX * 0.5f;
 			pEntity->SetPosition(centerX, mCubeStartPos.y);
@@ -104,7 +108,7 @@ void DummyEntity::OnUpdate()
 		{
 			float height = std::abs(distanceY);
 
-			pEntity->SetSize({20.0f, height});
+			pEntity->SetSize({10.0f, height});
 
 			float centerY = mCubeStartPos.y + distanceY * 0.5f;
 			pEntity->SetPosition(mCubeStartPos.x, centerY);
@@ -121,6 +125,28 @@ void DummyEntity::OnUpdate()
 			mIsInvincible = false;
 		}
 	}
+	
+	
 }
 
-
+void DummyEntity::GridUpdate(int PlayerNum)
+{
+	if (GetPosition().x/10 < GetScene<SampleScene>()->GRID_WIDTH && GetPosition().x/10 >= 0 && GetPosition().y/10 < GetScene<SampleScene>()->GRID_HEIGHT && GetPosition().y/10 >= 0)
+	{
+		if (GetScene<SampleScene>()->GetCell(GetPosition().x/10,GetPosition().y/10) == 0)
+		{
+			GetScene<SampleScene>()->SetAllValueCellToWall(PlayerNum);
+			GetScene<SampleScene>()->SetCell(GetPosition().x/10,GetPosition().y/10, PlayerNum);
+			//GetScene<SampleScene>()->printGrid();
+			//std::cout<< '\n' << std::endl;
+		}
+		else if (GetScene<SampleScene>()->GetCell(GetPosition().x/10,GetPosition().y/10) == -1)
+		{
+			Crash();
+		}
+	}
+	else
+	{
+		Crash();
+	}
+}
