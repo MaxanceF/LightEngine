@@ -1,5 +1,6 @@
 #include "DummyEntity.h"
 #include "Wall.h"
+#include "Debug.h"
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
@@ -18,22 +19,28 @@ void DummyEntity::OnCollision(Entity* other)
 		return;
 	if (dynamic_cast<Wall*>(other))
 	{
-		std::cout << "Collision avec un mur !" << std::endl;
+
+		std::cout << std::to_string(other->GetPosition().x) + " " + std::to_string(other->GetPosition().y) + " & " + std::to_string(GetPosition().x) + " " + std::to_string(GetPosition().y)<< std::endl;
+		Debug* debug = new Debug();
+		debug->DrawRectangle(GetPosition().x, GetPosition().y, other->GetPosition().x - GetPosition().x, other->GetPosition().y - GetPosition().y, sf::Color::Red);
 		if (!mIsInvincible)
 		{
-			
-			this->Destroy();
+			//this->Destroy();
 		}
 	}
 }
 
-sf::Clock actionClock;
 void DummyEntity::OnUpdate()
 {
 	float speed = 150.0f;
 	sf::Vector2f direction = {0.0f, 0.0f};
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+	{
+		SetDirection(0.0f, 0.0f, 0.0f); // Arrête le mouvement
+		mLastDirection = {0.0f, 0.0f}; // Réinitialise la dernière direction
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 	{
 		direction = {-1.0f, 0.0f}; // Gauche
 	}
@@ -59,20 +66,20 @@ void DummyEntity::OnUpdate()
 			std::rand() % 256,  // G (0-255)
 			std::rand() % 256   // B (0-255)
 		);
-		pEntity = CreateEntity<Wall>(sf::Vector2f{20.0f, 20.0f}, sf::Color::Cyan);
-		float offset = 30.0f;
+		pEntity = CreateEntity<Wall>(sf::Vector2f{20.0f, 20.0f}, randomColor);
+		float offset = 10.0f;
 
 		mCubeStartPos = GetPosition(0.5f, 0.5f);
 
 		mCubeStartPos.x -= mLastDirection.x * offset;
 		mCubeStartPos.y -= mLastDirection.y * offset;
 
-		pEntity->SetPosition(mCubeStartPos.x, mCubeStartPos.y);
+		//pEntity->SetPosition(mCubeStartPos.x, mCubeStartPos.y);
 	}
 	
 	if (pEntity)
 	{
-		float trailOffset = 30.0f; // longueur de la traînée derrière le joueur
+		float trailOffset = 10.0f; // longueur de la traînée derrière le joueur
 
 		sf::Vector2f playerPos = GetPosition(0.5f, 0.5f);
 		sf::Vector2f trailPos = playerPos;

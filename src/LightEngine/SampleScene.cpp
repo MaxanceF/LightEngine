@@ -6,13 +6,13 @@
 
 void SampleScene::OnInitialize()
 {
-	pEntity1 = CreateEntity<DummyEntity>(sf::Vector2f{40.0f,40.0f}, sf::Color::Red);
+	pEntity1 = CreateEntity<DummyEntity>(sf::Vector2f{20.0f,20.0f}, sf::Color::Red);
 	pEntity1->SetPosition(100, 100);
 	pEntity1->SetRigidBody(true);
 
-	pEntity2 = CreateEntity<DummyEntity>(sf::Vector2f{40.0f,40.0f}, sf::Color::Green);
-	pEntity2->SetPosition(500, 500);
-	pEntity2->SetRigidBody(true);
+	// pEntity2 = CreateEntity<DummyEntity>(sf::Vector2f{20.0f,20.0f}, sf::Color::Green);
+	// pEntity2->SetPosition(500, 500);
+	// pEntity2->SetRigidBody(true);
 
 	pEntitySelected = nullptr;
 }
@@ -25,7 +25,7 @@ void SampleScene::OnEvent(const sf::Event& event)
 	if (event.mouseButton.button == sf::Mouse::Button::Right)
 	{
 		TrySetSelectedEntity(pEntity1, event.mouseButton.x, event.mouseButton.y);
-		TrySetSelectedEntity(pEntity2, event.mouseButton.x, event.mouseButton.y);
+		//TrySetSelectedEntity(pEntity2, event.mouseButton.x, event.mouseButton.y);
 	}
 
 	if (event.mouseButton.button == sf::Mouse::Button::Left)

@@ -5,7 +5,7 @@
 #include "Debug.h"
 
 #include <SFML/Graphics/Color.hpp>
-#include <SFML/Graphics/CircleShape.hpp>
+
 
 void Entity::Initialize(sf::Vector2f size, const sf::Color& color)
 {
