@@ -1,6 +1,7 @@
 #include "SampleScene.h"
 
 #include <iostream>
+#include <SFML/Graphics/RenderWindow.hpp>
 
 #include "DummyEntity.h"
 #include "DummyEnemy.h"
@@ -9,6 +10,7 @@
 
 void SampleScene::OnInitialize()
 {
+	CreateGridVisual();
 	pEntity1 = CreateEntity<DummyEntity>(sf::Vector2f{10.0f,10.0f}, sf::Color::Green);
 	pEntity1->SetPosition(480, 320);
 	pEntity1->SetRigidBody(true);
@@ -98,3 +100,4 @@ void SampleScene::SetAllValueCellToWall(int value)
 		}
 	}
 }
+

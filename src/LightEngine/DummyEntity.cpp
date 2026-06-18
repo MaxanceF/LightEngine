@@ -29,89 +29,133 @@ void DummyEntity::Crash()
 
 void DummyEntity::Inputs()
 {
-	float speed = 150.0f;
-	sf::Vector2f direction = {0.0f, 0.0f};
+	constexpr float speed = 150.f;
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q) ||
+		sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 	{
-		SetDirection(0.0f, 0.0f, 0.0f); // Arrête le mouvement
-		mLastDirection = {0.0f, 0.0f}; // Réinitialise la dernière direction
+		mWantedDirection = {-1.f, 0.f};
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) ||
+			 sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 	{
-		direction = {-1.0f, 0.0f}; // Gauche
+		mWantedDirection = {1.f, 0.f};
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z) ||
+			 sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 	{
-		direction = {1.0f, 0.0f}; // Droite
+		mWantedDirection = {0.f, -1.f};
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) ||
+			 sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 	{
-		direction = {0.0f, -1.0f}; // Haut
-	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-	{
-		direction = {0.0f, 1.0f}; // Bas
+		mWantedDirection = {0.f, 1.f};
 	}
 
-	if ((direction.x != 0.0f || direction.y != 0.0f) && direction != mLastDirection)
+	if (!CanTurnNow())
 	{
-		SetDirection(direction.x, direction.y, speed);
-		mLastDirection = direction;
-		sf::Color randomColor(
-			std::rand() % 256,  // R (0-255)
-			std::rand() % 256,  // G (0-255)
-			std::rand() % 256   // B (0-255)
+		GridUpdate(1);
+		return;
+	}
+
+	bool opposite =
+		mWantedDirection.x == -mLastDirection.x &&
+		mWantedDirection.y == -mLastDirection.y;
+
+	if (mWantedDirection != sf::Vector2f{0.f, 0.f} &&
+		!opposite &&
+		mWantedDirection != mLastDirection)
+	{
+		mLastDirection = mWantedDirection;
+
+		SetDirection(
+			mLastDirection.x,
+			mLastDirection.y,
+			speed
 		);
-		pEntity = CreateEntity<Wall>(sf::Vector2f{20.0f, 20.0f}, sf::Color::Cyan);
-		float offset = 5.0f;
+
+		pEntity = CreateEntity<Wall>(
+			sf::Vector2f{20.f, 20.f},
+			sf::Color::Cyan
+		);
 
 		mCubeStartPos = GetPosition(0.5f, 0.5f);
+		constexpr float TILE_SIZE = 10.f;
 
-		mCubeStartPos.x -= mLastDirection.x * offset;
-		mCubeStartPos.y -= mLastDirection.y * offset;
+		mCubeStartPos.x =
+			std::round(mCubeStartPos.x / TILE_SIZE) * TILE_SIZE;
 
-		//pEntity->SetPosition(mCubeStartPos.x, mCubeStartPos.y);
-		//std::cout << GetPosition().x << " " << GetPosition().y << std::endl;
-		
+		mCubeStartPos.y =
+			std::round(mCubeStartPos.y / TILE_SIZE) * TILE_SIZE;
 	}
+
 	GridUpdate(1);
 }
 
 void DummyEntity::OnUpdate()
 {
 	Inputs();
+	constexpr float TILE_SIZE = 10.0f;
+
 	if (pEntity)
 	{
-		float trailOffset = 5.0f; // longueur de la traînée derrière le joueur
+		// Position du joueur convertie en coordonnées de grille
+		int gridX = static_cast<int>((GetPosition().x - 5) / TILE_SIZE);
+		int gridY = static_cast<int>((GetPosition().y - 5)/ TILE_SIZE);
 
-		sf::Vector2f playerPos = GetPosition(0.5f, 0.5f);
+			sf::Vector2f playerPos(
+				gridX * TILE_SIZE + TILE_SIZE * 0.5f,
+				gridY * TILE_SIZE + TILE_SIZE * 0.5f
+			);
+
 		sf::Vector2f trailPos = playerPos;
 
-		// Décale l'extrémité du stretch derrière le joueur
-		trailPos.x -= mLastDirection.x * trailOffset;
-		trailPos.y -= mLastDirection.y * trailOffset;
+		// L'extrémité de la traînée reste sur la grille
+		trailPos.x -= mLastDirection.x * (TILE_SIZE * 0.5f);
+		trailPos.y -= mLastDirection.y * (TILE_SIZE * 0.5f);
 
-		float distanceX = trailPos.x - mCubeStartPos.x;
-		float distanceY = trailPos.y - mCubeStartPos.y;
+		// On aligne également le point de départ
+		sf::Vector2f startPos(
+			std::round(mCubeStartPos.x / TILE_SIZE) * TILE_SIZE + TILE_SIZE * 0.5f,
+			std::round(mCubeStartPos.y / TILE_SIZE) * TILE_SIZE + TILE_SIZE * 0.5f
+		);
+
+		float distanceX = trailPos.x - startPos.x;
+		float distanceY = trailPos.y - startPos.y;
 
 		if (mLastDirection.x != 0.0f)
 		{
 			float width = std::abs(distanceX);
 
-			pEntity->SetSize({width, 10.0f});
+			// Évite une taille nulle
+			width = std::max(width, TILE_SIZE);
 
-			float centerX = mCubeStartPos.x + distanceX * 0.5f;
-			pEntity->SetPosition(centerX, mCubeStartPos.y);
+			pEntity->SetSize({width, TILE_SIZE});
+
+			float centerX = startPos.x + distanceX * 0.5f;
+			centerX = std::round(centerX);
+
+			pEntity->SetPosition(
+				centerX - TILE_SIZE * 0.5f,
+				startPos.y - TILE_SIZE * 0.5f
+			);
 		}
 		else if (mLastDirection.y != 0.0f)
 		{
 			float height = std::abs(distanceY);
 
-			pEntity->SetSize({10.0f, height});
+			// Évite une taille nulle
+			height = std::max(height, TILE_SIZE);
 
-			float centerY = mCubeStartPos.y + distanceY * 0.5f;
-			pEntity->SetPosition(mCubeStartPos.x, centerY);
+			pEntity->SetSize({TILE_SIZE, height});
+
+			float centerY = startPos.y + distanceY * 0.5f;
+			centerY = std::round(centerY);
+
+			pEntity->SetPosition(
+				startPos.x - TILE_SIZE * 0.5f,
+				centerY - TILE_SIZE * 0.5f
+			);
 		}
 	}
 
@@ -126,6 +170,8 @@ void DummyEntity::OnUpdate()
 		}
 	}
 	
+
+
 	
 }
 
@@ -149,4 +195,20 @@ void DummyEntity::GridUpdate(int PlayerNum)
 	{
 		Crash();
 	}
+}
+
+bool DummyEntity::CanTurnNow() const
+{
+	constexpr float TILE_SIZE = 10.f;
+	constexpr float TOLERANCE = 1.f;
+
+	float centerX =
+		std::round(GetPosition().x / TILE_SIZE) * TILE_SIZE;
+
+	float centerY =
+		std::round(GetPosition().y / TILE_SIZE) * TILE_SIZE;
+
+	return
+		std::abs(GetPosition().x - centerX) < TOLERANCE &&
+		std::abs(GetPosition().y - centerY) < TOLERANCE;
 }

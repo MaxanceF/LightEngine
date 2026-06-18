@@ -11,6 +11,9 @@ protected:
 	float mInvincibilityTime = 0.0f;
 	bool mIsInvincible = false;
 	void GridUpdate(int);
+	sf::Vector2f mWantedDirection = {0.f, 0.f};
+	bool CanTurnNow() const;
+
 	
 public:
 	DummyEntity();

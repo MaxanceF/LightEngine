@@ -23,13 +23,14 @@ public:
 	void printGrid() const;
 	void SetAllValueCellToWall(int value);
 	
+	
 private:
 	
 	DummyEntity* pEntity1;
 	DummyEntity* pEntity2;
 	
 	DummyEntity* pEntitySelected;
-
+	
 	
 
 private:

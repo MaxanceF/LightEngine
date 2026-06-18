@@ -8,6 +8,7 @@
 
 #include <iostream>
 
+
 GameManager::GameManager()
 {
 	mpWindow = nullptr;
@@ -149,12 +150,19 @@ void GameManager::Update()
 void GameManager::Draw()
 {
 	mpWindow->clear(mClearColor);
-	
+
+
+	// Background grille
+	mpScene->DrawGrid(mpWindow);
+
+
+	// Entités
 	for (Entity* entity : mEntities)
 	{
 		mpWindow->draw(*entity->GetShape());
 	}
-	
+
+
 	Debug::Get()->Draw(mpWindow);
 
 	mpWindow->display();

@@ -1,7 +1,9 @@
 #pragma once
+#include "vector"
 
 namespace sf
 {
+	class RectangleShape;
 	class RenderWindow;
 }
 
@@ -12,6 +14,8 @@ class GameManager;
 
 class Scene
 {
+	static constexpr int GRID_WIDTH = 64;
+	static constexpr int GRID_HEIGHT = 64;
 private:
 	GameManager* mpGameManager;
 
@@ -25,6 +29,9 @@ protected:
 	virtual void OnEvent(const sf::Event& event) = 0;
 	virtual void OnUpdate() = 0;
 
+	void CreateGridVisual();
+	std::vector<sf::RectangleShape> mGridLines;
+
 public:
 	template<typename T>
 	T* CreateEntity(sf::Vector2f size, const sf::Color& color);
@@ -34,7 +41,8 @@ public:
 	int GetWindowWidth() const;
 	int GetWindowHeight() const;
 	sf::RenderWindow* GetRenderWindow() const;
-
+	void DrawGrid(sf::RenderWindow* window);
+	
 	friend GameManager;
 };
 
