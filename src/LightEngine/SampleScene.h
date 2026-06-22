@@ -4,6 +4,13 @@
 
 class DummyEntity;
 
+struct Case
+{
+	int x;
+	int y;
+	int value;
+};
+
 class SampleScene : public Scene
 {
 
@@ -11,18 +18,17 @@ public:
 	static constexpr int GRID_WIDTH = 64;
 	static constexpr int GRID_HEIGHT = 64;
 
-	std::vector<int> grid;
+	
+	std::vector<Case> grid;
 
-	SampleScene()
-		: grid(GRID_WIDTH * GRID_HEIGHT, 0)
-	{
-	}
+	SampleScene();
 	
 	int& GetCell(int x, int y);
 	void SetCell(int x, int y, int value);
 	void printGrid() const;
 	void SetAllValueCellToWall(int value);
-	
+	int GetPlayerGridX();
+	int GetPlayerGridY();
 	
 private:
 	
@@ -31,10 +37,11 @@ private:
 	
 	DummyEntity* pEntitySelected;
 	
-	
-
-private:
 	void TrySetSelectedEntity(DummyEntity* pEntity, int x, int y);
+	
+	void UpdateGridSquareVisual();
+	
+	
 
 public:
 	void OnInitialize() override;

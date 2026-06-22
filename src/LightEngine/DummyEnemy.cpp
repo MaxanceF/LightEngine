@@ -1,35 +1,22 @@
 #include "DummyEnemy.h"
 
 #include "SampleScene.h"
+#include "Utils.h"
 
 
-
-void DummyEnemy::Inputs()
+void DummyEnemy::OnUpdate()
 {
-    constexpr float speed = 150.f;
+    mMoveTimer += GetDeltaTime();
 
-    if (mLastDirection == sf::Vector2f{0.f, 0.f})
-    {
-        mLastDirection = {1.f, 0.f};
-        mWantedDirection = mLastDirection;
-
-        SetDirection(
-            mLastDirection.x,
-            mLastDirection.y,
-            speed
-        );
-
-        GridUpdate(2);
+    if (mMoveTimer < mMoveDelay)
         return;
-    }
 
-    int gridX = static_cast<int>(GetPosition().x / 10.f);
-    int gridY = static_cast<int>(GetPosition().y / 10.f);
+    mMoveTimer -= mMoveDelay;
+
+    auto* scene = GetScene<SampleScene>();
 
     auto IsFree = [&](int x, int y)
     {
-        auto* scene = GetScene<SampleScene>();
-
         if (x < 0 || x >= scene->GRID_WIDTH ||
             y < 0 || y >= scene->GRID_HEIGHT)
         {
@@ -39,149 +26,191 @@ void DummyEnemy::Inputs()
         return scene->GetCell(x, y) == 0;
     };
 
-    auto IsOpposite = [](const sf::Vector2f& a,
-                         const sf::Vector2f& b)
+    auto TurnLeft = [](const sf::Vector2i& dir)
     {
-        return a.x == -b.x &&
-               a.y == -b.y;
+        return sf::Vector2i(-dir.y, dir.x);
     };
 
-    auto CountFreeCells =
-        [&](int x, int y, int dx, int dy)
+    auto TurnRight = [](const sf::Vector2i& dir)
     {
-        int count = 0;
-
-        while (IsFree(x, y))
-        {
-            count++;
-
-            x += dx;
-            y += dy;
-        }
-
-        return count;
+        return sf::Vector2i(dir.y, -dir.x);
     };
 
-    if (CanTurnNow())
+    if (mDirection == sf::Vector2i(0, 0))
     {
-        bool danger = false;
+        mDirection = {1, 0};
+    }
 
-        constexpr int lookAhead = 5;
+    int random = std::rand() % 100;
 
-        for (int i = 1; i <= lookAhead; ++i)
+    // 85% tout droit
+    // 7.5% gauche
+    // 7.5% droite
+    if (random >= 85)
+    {
+        bool turnLeftFirst = (std::rand() % 2) == 0;
+
+        sf::Vector2i leftDir = TurnLeft(mDirection);
+        sf::Vector2i rightDir = TurnRight(mDirection);
+
+        sf::Vector2i wantedDir =
+            turnLeftFirst ? leftDir : rightDir;
+
+        int testX =
+            mGridPos.x + wantedDir.x;
+
+        int testY =
+            mGridPos.y + wantedDir.y;
+
+        if (IsFree(testX, testY))
         {
-            int checkX =
-                gridX +
-                static_cast<int>(mLastDirection.x) * i;
-
-            int checkY =
-                gridY +
-                static_cast<int>(mLastDirection.y) * i;
-
-            if (!IsFree(checkX, checkY))
-            {
-                danger = true;
-                break;
-            }
+            mDirection = wantedDir;
         }
-
-        bool randomDecision =
-            (std::rand() % 100) < 5; // 5%
-
-        if (danger || randomDecision)
+        else
         {
-            struct Choice
+            wantedDir =
+                turnLeftFirst ? rightDir : leftDir;
+
+            testX =
+                mGridPos.x + wantedDir.x;
+
+            testY =
+                mGridPos.y + wantedDir.y;
+
+            if (IsFree(testX, testY))
             {
-                sf::Vector2f dir;
-                int score;
-            };
-
-            std::vector<Choice> choices;
-
-            std::vector<sf::Vector2f> directions =
-            {
-                { 1.f,  0.f},
-                {-1.f,  0.f},
-                { 0.f,  1.f},
-                { 0.f, -1.f}
-            };
-
-            for (auto& dir : directions)
-            {
-                if (IsOpposite(dir, mLastDirection))
-                    continue;
-
-                int nextX =
-                    gridX + static_cast<int>(dir.x);
-
-                int nextY =
-                    gridY + static_cast<int>(dir.y);
-
-                if (!IsFree(nextX, nextY))
-                    continue;
-
-                int score =
-                    CountFreeCells(
-                        nextX,
-                        nextY,
-                        static_cast<int>(dir.x),
-                        static_cast<int>(dir.y));
-
-                choices.push_back({dir, score});
+                mDirection = wantedDir;
             }
-
-            if (!choices.empty())
-            {
-                std::sort(
-                    choices.begin(),
-                    choices.end(),
-                    [](const Choice& a,
-                       const Choice& b)
-                    {
-                        return a.score > b.score;
-                    });
-
-                if (choices.size() >= 2 &&
-                    (std::rand() % 100) < 15)
-                {
-                    mWantedDirection =
-                        choices[1].dir;
-                }
-                else
-                {
-                    mWantedDirection =
-                        choices[0].dir;
-                }
-            }
-        }
-
-        if (mWantedDirection != mLastDirection)
-        {
-            mLastDirection = mWantedDirection;
-
-            SetDirection(
-                mLastDirection.x,
-                mLastDirection.y,
-                speed
-            );
-
-            pEntity = CreateEntity<Wall>(
-                sf::Vector2f{20.f, 20.f},
-                sf::Color::Red
-            );
-
-            mCubeStartPos = GetPosition(0.5f, 0.5f);
-            constexpr float TILE_SIZE = 10.f;
-
-            mCubeStartPos.x =
-                std::round(mCubeStartPos.x / TILE_SIZE) * TILE_SIZE;
-
-            mCubeStartPos.y =
-                std::round(mCubeStartPos.y / TILE_SIZE) * TILE_SIZE;
         }
     }
 
-    GridUpdate(2);
+    //
+    // Sécurité : obstacle devant
+    //
+    int frontX =
+        mGridPos.x + mDirection.x;
+
+    int frontY =
+        mGridPos.y + mDirection.y;
+
+    if (!IsFree(frontX, frontY))
+    {
+        sf::Vector2i leftDir =
+            TurnLeft(mDirection);
+
+        sf::Vector2i rightDir =
+            TurnRight(mDirection);
+
+        bool leftFree =
+            IsFree(
+                mGridPos.x + leftDir.x,
+                mGridPos.y + leftDir.y);
+
+        bool rightFree =
+            IsFree(
+                mGridPos.x + rightDir.x,
+                mGridPos.y + rightDir.y);
+
+        if (leftFree && rightFree)
+        {
+            mDirection =
+                (std::rand() % 2 == 0)
+                ? leftDir
+                : rightDir;
+        }
+        else if (leftFree)
+        {
+            mDirection = leftDir;
+        }
+        else if (rightFree)
+        {
+            mDirection = rightDir;
+        }
+        else
+        {
+            Crash();
+            return;
+        }
+    }
+
+    int nextX =
+        mGridPos.x + mDirection.x;
+
+    int nextY =
+        mGridPos.y + mDirection.y;
+
+    if (!IsFree(nextX, nextY))
+    {
+        Crash();
+        return;
+    }
+
+    scene->SetCell(
+        mGridPos.x,
+        mGridPos.y,
+        -1);
+
+    mGridPos.x = nextX;
+    mGridPos.y = nextY;
+
+    scene->SetCell(
+        mGridPos.x,
+        mGridPos.y,
+        2);
+
+    constexpr float TILE_SIZE = 10.f;
+
+    SetPosition(
+        mGridPos.x * TILE_SIZE,
+        mGridPos.y * TILE_SIZE);
+}
+
+int DummyEnemy::CountReachableCells(int startX, int startY)
+{
+    
+    
+    auto* scene = GetScene<SampleScene>();
+    
+    
+    auto IsFree = [&](int x, int y)
+    {
+        if (x < 0 || x >= scene->GRID_WIDTH ||
+            y < 0 || y >= scene->GRID_HEIGHT)
+        {
+            return false;
+        }
+
+        return scene->GetCell(x, y) == 0;
+    };
+    
+    std::queue<sf::Vector2i> open;
+
+    std::vector<std::vector<bool>> visited(
+        scene->GRID_WIDTH,
+        std::vector<bool>(
+            scene->GRID_HEIGHT,
+            false));
+
+    open.push({startX, startY});
+    visited[startX][startY] = true;
+
+    int count = 0;
+
+    constexpr int dirs[4][2] =
+    {
+        { 1,  0},
+        {-1,  0},
+        { 0,  1},
+        { 0, -1}
+    };
+    
+    return count;
+}
+
+DummyEnemy::DummyEnemy()
+{
+    mWantedDirection={1, 0};
+    mDirection={1, 0};
 }
 
 bool DummyEnemy::IsOpposite(const sf::Vector2f& a, const sf::Vector2f& b)
@@ -189,6 +218,14 @@ bool DummyEnemy::IsOpposite(const sf::Vector2f& a, const sf::Vector2f& b)
 	return a.x == -b.x && a.y == -b.y;
 }
 
+sf::Vector2i TurnLeft(const sf::Vector2i& dir)
+{
+    return {-dir.y, dir.x};
+}
 
+sf::Vector2i TurnRight(const sf::Vector2i& dir)
+{
+    return {dir.y, -dir.x};
+}
 
 

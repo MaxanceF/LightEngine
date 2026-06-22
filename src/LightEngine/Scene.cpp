@@ -65,10 +65,18 @@ void Scene::CreateGridVisual()
 	}
 }
 
-void Scene::DrawGrid(sf::RenderWindow* window)
+void Scene::DrawBGGrid()
 {
 	for(auto& line : mGridLines)
 	{
 		GetRenderWindow()->draw(line);
+	}
+}
+
+void Scene::DrawSquareGrid()
+{
+	for(auto& square : mGridSquares)
+	{
+		GetRenderWindow()->draw(square);
 	}
 }

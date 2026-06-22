@@ -1,6 +1,9 @@
-#include <SFML/System/Vector2.hpp>
+#include "Utils.h"
 
+#include <SFML/System/Vector2.hpp>
+#include <chrono>
 #include <cmath>
+#include <iostream>
 
 namespace Utils 
 {
@@ -34,4 +37,24 @@ namespace Utils
 
 		return std::atan2(det, dot) * 180 / 3.14159265;
 	}
+
+	std::chrono::steady_clock::time_point beginChrono;
+	void StarChrono()
+	{
+    	beginChrono = std::chrono::high_resolution_clock::now();
+
+	}
+
+	void StopChrono()
+	{
+    	auto stopChrono = std::chrono::high_resolution_clock::now();
+
+    	auto elapsed_ms =
+			std::chrono::duration_cast<std::chrono::milliseconds>(stopChrono - beginChrono);
+
+    	std::cout << "Temps écoulé : "
+				  << elapsed_ms.count()
+				  << " ms\n";
+	}
+
 }

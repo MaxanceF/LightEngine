@@ -30,7 +30,9 @@ protected:
 	virtual void OnUpdate() = 0;
 
 	void CreateGridVisual();
+	void DrawSquareGrid();
 	std::vector<sf::RectangleShape> mGridLines;
+	std::vector<sf::RectangleShape> mGridSquares;
 
 public:
 	template<typename T>
@@ -41,7 +43,7 @@ public:
 	int GetWindowWidth() const;
 	int GetWindowHeight() const;
 	sf::RenderWindow* GetRenderWindow() const;
-	void DrawGrid(sf::RenderWindow* window);
+	void DrawBGGrid();
 	
 	friend GameManager;
 };

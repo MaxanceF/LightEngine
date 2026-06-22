@@ -7,20 +7,29 @@ class DummyEntity : public Entity
 protected:	
 	Entity* pEntity = nullptr;
 	sf::Vector2f mLastDirection = {0.0f, 0.0f};
-	sf::Vector2f mCubeStartPos = {0.0f, 0.0f};
 	float mInvincibilityTime = 0.0f;
 	bool mIsInvincible = false;
-	void GridUpdate(int);
-	sf::Vector2f mWantedDirection = {0.f, 0.f};
+	sf::Vector2i mWantedDirection{1, 0};
+	sf::Vector2i mDirection{1, 0};
 	bool CanTurnNow() const;
 
+	struct GridPos
+	{
+		int x;
+		int y;
+	};
+
+	GridPos mGridPos;
+
+
+	float mMoveTimer = 0.f;
+	float mMoveDelay = 0.05f; // 20 cases/sec
 	
 public:
 	DummyEntity();
-	void OnCollision(Entity* other) override;
 	void OnUpdate() override;
 	void Crash();
 	virtual void Inputs();
-	
+	void SetMGridPos(int x, int y);
 };
 

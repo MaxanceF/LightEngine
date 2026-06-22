@@ -11,13 +11,18 @@
 void SampleScene::OnInitialize()
 {
 	CreateGridVisual();
-	pEntity1 = CreateEntity<DummyEntity>(sf::Vector2f{10.0f,10.0f}, sf::Color::Green);
+	
+	pEntity1 = CreateEntity<DummyEntity>(sf::Vector2f{10.0f,10.0f}, sf::Color::Transparent);
 	pEntity1->SetPosition(480, 320);
+	SetCell(48,32,1);
 	pEntity1->SetRigidBody(true);
+	pEntity1->SetMGridPos(48,32);
 
-	pEntity2 = CreateEntity<DummyEnemy>(sf::Vector2f{10.0f,10.0f}, sf::Color::Magenta);
+	pEntity2 = CreateEntity<DummyEnemy>(sf::Vector2f{10.0f,10.0f}, sf::Color::Transparent);
 	pEntity2->SetPosition(160, 320);
+	SetCell(16,32,2);
 	pEntity2->SetRigidBody(true);
+	pEntity2->SetMGridPos(16,32);
 
 	pEntitySelected = nullptr;
 }
@@ -29,8 +34,7 @@ void SampleScene::OnEvent(const sf::Event& event)
 
 	if (event.mouseButton.button == sf::Mouse::Button::Right)
 	{
-		TrySetSelectedEntity(pEntity1, event.mouseButton.x, event.mouseButton.y);
-		//TrySetSelectedEntity(pEntity2, event.mouseButton.x, event.mouseButton.y);
+		printGrid();
 	}
 
 	if (event.mouseButton.button == sf::Mouse::Button::Left)
@@ -58,25 +62,39 @@ void SampleScene::OnUpdate()
 		sf::Vector2f position = pEntitySelected->GetPosition();
 		Debug::DrawCircle(position.x, position.y, 10, sf::Color::Blue);
 	}
+	UpdateGridSquareVisual();
 }
 
 int& SampleScene::GetCell(int x, int y)
 {
-	return grid[y * GRID_WIDTH + x];
+	for (int i=0; i<grid.size(); i++)
+	{
+		if (grid[i].x == x && grid[i].y == y)
+		{
+			return grid[i].value;
+		}
+	}
 }
+
 
 void SampleScene::SetCell(int x, int y, int value)
 {
-	grid[y * GRID_WIDTH + x] = value;
+	for (int i=0; i<grid.size(); i++)
+	{
+		if (grid[i].x == x && grid[i].y == y)
+		{
+			grid[i].value = value;
+		}
+	}
+	
 }
 
 void SampleScene::printGrid() const
 {
-	for (int y = 0; y < GRID_HEIGHT; y++)
+	int LastY = 0;
+	for (int i = 0; i < grid.size(); i++)
 	{
-		for (int x = 0; x < GRID_WIDTH; x++)
-		{
-			switch (grid[y * GRID_WIDTH + x])
+			switch (grid[i].value)
 			{
 			case -1: std::cout << '#'; break; // mur
 			case 0:  std::cout << '.'; break; // vide
@@ -84,20 +102,120 @@ void SampleScene::printGrid() const
 			case 2:  std::cout << 'B'; break; // joueur 2
 			default: std::cout << '?'; break;
 			}
+		if (LastY != grid[i].y)
+		{
+			std::cout << '\n';
+			LastY = grid[i].y;
 		}
-
-		std::cout << '\n';
+		
 	}
 }
 
 void SampleScene::SetAllValueCellToWall(int value)
 {
-	for (int& cell : grid)
+	for (Case& cell : grid)
 	{
-		if (cell == value)
+		if (cell.value == value)
 		{
-			cell = -1;
+			cell.value = -1;
 		}
 	}
 }
 
+
+
+void SampleScene::UpdateGridSquareVisual()
+{
+	constexpr float TILE_SIZE = 10.f;
+	mGridSquares.clear();
+	for (int x = 0; x <= GRID_WIDTH-1; x++)
+	{
+		for (int y = 0; y <= GRID_HEIGHT-1; y++)
+		{
+			if (GetCell(x,y) == -1)
+			{
+				sf::RectangleShape square;
+
+				square.setSize(
+					sf::Vector2f(TILE_SIZE,  TILE_SIZE)
+				);
+
+				square.setFillColor(sf::Color::White);
+
+				square.setPosition(x * TILE_SIZE + TILE_SIZE * 0.5f,y * TILE_SIZE + TILE_SIZE * 0.5f);
+				mGridSquares.push_back(square);
+			}
+			else if (GetCell(x,y) == 1)
+			{
+				sf::RectangleShape square;
+
+				square.setSize(
+					sf::Vector2f(TILE_SIZE,  TILE_SIZE)
+				);
+
+				square.setFillColor(sf::Color::Green);
+
+				square.setPosition(x * TILE_SIZE + TILE_SIZE * 0.5f,y * TILE_SIZE + TILE_SIZE * 0.5f);
+				mGridSquares.push_back(square);
+			}
+			else if (GetCell(x,y) == 2)
+			{
+				sf::RectangleShape square;
+
+				square.setSize(
+					sf::Vector2f(TILE_SIZE,  TILE_SIZE)
+				);
+
+				square.setFillColor(sf::Color::Magenta);
+
+				square.setPosition(x * TILE_SIZE + TILE_SIZE * 0.5f,y * TILE_SIZE + TILE_SIZE * 0.5f);
+				mGridSquares.push_back(square);
+			}
+		}
+	}
+}
+
+SampleScene::SampleScene()
+{
+	for (int i=0; i < GRID_HEIGHT; i++)
+	{
+		for (int j=0; j < GRID_WIDTH; j++)
+		{
+			Case c;
+
+			c.x = j;
+			c.y = i;
+			if (i == GRID_HEIGHT-1 || j == GRID_WIDTH-1 || i == 0 || j == 0)
+			{
+				c.value =-1;
+			} else
+			{
+				c.value = 0;
+			}
+			
+			grid.push_back(c);
+		}
+	}
+}
+
+int SampleScene::GetPlayerGridX()
+{
+	for (int i=0; i<grid.size(); i++)
+	{
+		if (grid[i].value == 1)
+		{
+			return grid[i].x;
+		}
+	}
+}
+
+int SampleScene::GetPlayerGridY()
+{
+	for (int i=0; i<grid.size(); i++)
+	{
+		if (grid[i].value == 1)
+		{
+			return grid[i].y;
+		}
+	}
+}
